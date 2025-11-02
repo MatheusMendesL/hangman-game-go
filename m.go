@@ -11,7 +11,7 @@ func main() {
 
 	fmt.Println("Jogo da forca!")
 	fmt.Println("Tema: Animais")
-	fmt.Println("Você tem 7 vidas apenas, caso errar, você perde uma")
+	fmt.Println("Você tem 7 chances apenas, caso errar, você perde uma")
 
 	Forca.Init()
 }

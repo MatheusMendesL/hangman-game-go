@@ -49,22 +49,32 @@ func (f *Forca) Init() {
 	f.Chute(letters)
 }
 
+func (f *Forca) Chutar() (string, string) {
+	fmt.Println("Digite a letra")
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	chute := scanner.Text()
+	chute = strings.TrimSpace(chute)
+	if len(chute) != 1 {
+		fmt.Println()
+		return "", ConfigErrors.ErrLetters
+	}
+
+	if f.Used[chute] {
+		return "", ConfigErrors.ErrExists
+	}
+	return chute, ""
+}
+
 func (f *Forca) Chute(letters []string) {
+
 	f.Used = make(map[string]bool)
 	for !f.FimDeJogo() {
 
-		fmt.Println("Digite a letra")
-		scanner := bufio.NewScanner(os.Stdin)
-		scanner.Scan()
-		chute := scanner.Text()
-		chute = strings.TrimSpace(chute)
-		if len(chute) != 1 {
-			fmt.Println("Erro: ", ConfigErrors.ErrLetters)
-			continue
-		}
+		chute, err := f.Chutar()
 
-		if f.Used[chute] {
-			fmt.Println("Erro: ", ConfigErrors.ErrExists)
+		if err != "" {
+			fmt.Println("Erro: ", err)
 			continue
 		}
 
