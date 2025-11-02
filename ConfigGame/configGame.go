@@ -3,7 +3,10 @@ package ConfigGame
 import (
 	ConfigErrors "_027_exercicio/ErrosCfg"
 	"bufio"
+	"errors"
 	"fmt"
+	"io"
+	"math/rand/v2"
 	"os"
 	"strings"
 )
@@ -17,11 +20,38 @@ type Forca struct {
 
 var ForcaStruct = &Forca{}
 
-func (f *Forca) Chute(letters []string) {
-	if f.Used == nil {
-		f.Used = make(map[string]bool)
-	}
+func (f *Forca) Init() {
+	words := []string{"cachorro", "gato", "elefante", "leao", "tigre", "girafa", "coelho", "urso", "macaco", "cavalo"}
+	x := rand.IntN(len(words))
+	f.Word = words[x]
+	reader := strings.NewReader(f.Word)
+	buffer := make([]byte, 1)
+	f.Lifes = 7
+	letters := []string{}
+
 	for {
+		n, err := reader.Read(buffer)
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				break
+			}
+			panic(err)
+		}
+		letters = append(letters, string(buffer[:n]))
+	}
+
+	for i := 0; i < len(letters); i++ {
+		f.SliceSpaces = append(f.SliceSpaces, "_")
+	}
+
+	fmt.Println(f.SliceSpaces)
+
+	f.Chute(letters)
+}
+
+func (f *Forca) Chute(letters []string) {
+	f.Used = make(map[string]bool)
+	for !f.FimDeJogo() {
 
 		fmt.Println("Digite a letra")
 		scanner := bufio.NewScanner(os.Stdin)
@@ -50,11 +80,6 @@ func (f *Forca) Chute(letters []string) {
 		if !Contains(letters, chute) {
 			f.Lifes--
 			fmt.Printf("Você tem apenas %d vidas! \n", f.Lifes)
-		}
-
-		res := f.FimDeJogo()
-		if res {
-			break
 		}
 	}
 }
