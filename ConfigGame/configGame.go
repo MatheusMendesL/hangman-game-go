@@ -15,15 +15,7 @@ type Forca struct {
 	Lifes       int
 }
 
-type Jogo interface {
-	Chute() []string
-}
-
 var ForcaStruct = &Forca{}
-
-/* func (Forca) LerEntrada() string {
-
-} */
 
 func (f *Forca) Chute(letters []string) {
 	if f.Used == nil {
