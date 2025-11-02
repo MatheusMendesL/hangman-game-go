@@ -4,17 +4,15 @@
 package main
 
 import (
-	"bufio"
+	"_027_exercicio/ConfigGame"
 	"errors"
 	"fmt"
 	"io"
 	"math/rand/v2"
-	"os"
 	"strings"
 )
 
-var errLetters = "Deve ser digitado uma letra apenas!"
-var errExists = "Você já digitou essa letra"
+var Forca = ConfigGame.ForcaStruct
 
 func main() {
 
@@ -24,10 +22,10 @@ func main() {
 
 	words := []string{"cachorro", "gato", "elefante", "leao", "tigre", "girafa", "coelho", "urso", "macaco", "cavalo"}
 	x := rand.IntN(len(words))
-	animal := words[x]
-	reader := strings.NewReader(animal)
+	Forca.Word = words[x]
+	reader := strings.NewReader(Forca.Word)
 	buffer := make([]byte, 1)
-	lifes := 7
+	Forca.Lifes = 7
 	letters := []string{}
 
 	for {
@@ -41,64 +39,11 @@ func main() {
 		letters = append(letters, string(buffer[:n]))
 	}
 
-	sliceSpaces := []string{}
 	for i := 0; i < len(letters); i++ {
-		sliceSpaces = append(sliceSpaces, "_")
+		Forca.SliceSpaces = append(Forca.SliceSpaces, "_")
 	}
 
-	fmt.Println(sliceSpaces)
+	fmt.Println(Forca.SliceSpaces)
 
-	used := map[string]bool{}
-	for {
-
-		fmt.Println("Digite a letra")
-		scanner := bufio.NewScanner(os.Stdin)
-		scanner.Scan()
-		chute := scanner.Text()
-		chute = strings.TrimSpace(chute)
-		if len(chute) != 1 {
-			fmt.Println("Erro: ", errLetters)
-			continue
-		}
-
-		if used[chute] {
-			fmt.Println("Erro: ", errExists)
-			continue
-		}
-
-		used[chute] = true
-		fmt.Println(contains(letters, chute))
-
-		for i, v := range letters {
-			if chute == v {
-				sliceSpaces[i] = chute
-				fmt.Println(sliceSpaces)
-			}
-		}
-
-		if !contains(letters, chute) {
-			lifes--
-			fmt.Printf("Você tem apenas %d vidas! \n", lifes)
-		}
-
-		if lifes <= 0 {
-			fmt.Printf("Você perdeu, a palavra era %s", animal)
-			break
-		}
-
-		if !contains(sliceSpaces, "_") {
-			fmt.Println("Fim de jogo, parabéns!")
-			break
-		}
-	}
-}
-
-func contains[T comparable](s []T, cmp T) bool {
-	for _, str := range s {
-		if str == cmp {
-			return true
-		}
-	}
-
-	return false
+	Forca.Chute(letters)
 }
