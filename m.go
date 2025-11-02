@@ -1,6 +1,3 @@
-// meu obj, fazer com que o reader leia e o contains verifica se o que eu enviar vai estar, eu entendi a ideia
-// então vou fazer
-
 package main
 
 import (
